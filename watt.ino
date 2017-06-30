@@ -10,6 +10,7 @@
 #define FIREBASE_AUTH "BIiq1X5t2MYbzj9mQxat1BuABRNIX8VT7YGIz7Mb"
 
 #define DEVICE_ID "-KfWxUaA7tnwZr4ZIbrq"
+#define CONTROL_PIN LED_BUILTIN
 
 #define WIFI_SSID "Zox"
 #define WIFI_PASSWORD "The1stZox"
@@ -25,7 +26,7 @@ void setup() {
   //configurations
   Serial.begin(9600);
   pinMode(A0, INPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(CONTROL_PIN, OUTPUT);
   pinMode(2, OUTPUT);
 
   // connect to wifi.
@@ -57,26 +58,24 @@ void loop() {
   Firebase.setFloat(String("Devices/")+DEVICE_ID+"/consumption", realTime);
 
   //just for debugging
-  Serial.print("Real-time Power = ");
-  Serial.println(realTime);
-  Serial.println(hour());
-  Serial.println(minute());
+  Serial.println(String("Real-time Power = ") + realTime);
+  Serial.println(String(hour()) + ":" + minute());
   Serial.println(" ");
 
-
+  
   if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/enabled") == true) {
-    digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(CONTROL_PIN, HIGH);
     if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/stopAt/enabled") == true && Firebase.getInt(String("Devices/")+DEVICE_ID+"/stopAt/hour") == hour() && Firebase.getInt(String("Devices/")+DEVICE_ID+"/stopAt/min") == minute()) {
-      digitalWrite(LED_BUILTIN, LOW);
+      digitalWrite(CONTROL_PIN, LOW);
       Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", false);
       Firebase.setBool(String("Devices/")+DEVICE_ID+"/stopAt/enabled", false);
     }
   }
-    
-  if(Firebase.getBool(String("Devices/")+DEVICE_ID+"enabled") == false) {
-    digitalWrite(LED_BUILTIN, LOW);
+
+  if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/enabled") == false) {
+    digitalWrite(CONTROL_PIN, LOW);
     if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/startAt/enabled") == true && Firebase.getInt(String("Devices/")+DEVICE_ID+"/startAt/hour") == hour() && Firebase.getInt(String("Devices/")+DEVICE_ID+"/startAt/min") == minute()) {
-      digitalWrite(LED_BUILTIN, HIGH);
+      digitalWrite(CONTROL_PIN, HIGH);
       Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", true);
       Firebase.setBool(String("Devices/")+DEVICE_ID+"/startAt/enabled", false);
     }
