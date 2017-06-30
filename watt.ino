@@ -123,7 +123,7 @@ float readRealTime() {
   powerAverage = powerSum/10;
 
   // return onChange
-  if( powerAverage > (prevPowerAverage + 5) || powerAverage < (prevPowerAverage - 5)) {
+  if(powerAverage > (prevPowerAverage + 5) || powerAverage < (prevPowerAverage - 5)) {
       prevPowerAverage = powerAverage;
       return powerAverage;
   }
