@@ -1,5 +1,5 @@
-#include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
+#include <ESP8266WiFi.h>        //https://github.com/esp8266/Arduino
+#include <WiFiUdp.h>            //Arduino library
 #include "watt_time.h"
 
 // NTP Servers:

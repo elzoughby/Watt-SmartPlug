@@ -1,21 +1,21 @@
 // Watt?
-#include <ESP8266WiFi.h>
-#include <FirebaseArduino.h>
+
+
+#include <ESP8266WiFi.h>		//https://github.com/esp8266/Arduino
+#include <FirebaseArduino.h>	//https://github.com/firebase/firebase-arduino
 #include "watt_time.h"
 
 #define FIREBASE_HOST "watt-project-eg.firebaseio.com"
 #define FIREBASE_AUTH "BIiq1X5t2MYbzj9mQxat1BuABRNIX8VT7YGIz7Mb"
 
-#define WIFI_SSID "Eng"
-#define WIFI_PASSWORD "A205080/*"
+#define WIFI_SSID "Zox"
+#define WIFI_PASSWORD "The1stZox"
 
 
 
 float prevPowerAverage = 0;
 float realTime = 0;
-short currDay = 0;
-short currMonth = 0;
-unsigned int currYear = 0;
+
 
 
 void setup() {
