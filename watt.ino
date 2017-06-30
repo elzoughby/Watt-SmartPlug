@@ -4,9 +4,12 @@
 #include <ESP8266WiFi.h>		//https://github.com/esp8266/Arduino
 #include <FirebaseArduino.h>	//https://github.com/firebase/firebase-arduino
 #include "watt_time.h"
+#include <string.h>
 
 #define FIREBASE_HOST "watt-project-eg.firebaseio.com"
 #define FIREBASE_AUTH "BIiq1X5t2MYbzj9mQxat1BuABRNIX8VT7YGIz7Mb"
+
+#define DEVICE_ID "-KfWxUaA7tnwZr4ZIbrq"
 
 #define WIFI_SSID "Zox"
 #define WIFI_PASSWORD "The1stZox"
@@ -51,7 +54,7 @@ void setup() {
 void loop() {
 
   realTime = readRealTime();
-  Firebase.setFloat("Devices/-KfWxUaA7tnwZr4ZIbrq/consumption", realTime);
+  Firebase.setFloat(String("Devices/")+DEVICE_ID+"/consumption", realTime);
 
   //just for debugging
   Serial.print("Real-time Power = ");
@@ -61,21 +64,21 @@ void loop() {
   Serial.println(" ");
 
 
-  if(Firebase.getBool("Devices/-KfWxUaA7tnwZr4ZIbrq/enabled") == true) {
+  if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/enabled") == true) {
     digitalWrite(LED_BUILTIN, HIGH);
-    if(Firebase.getBool("Devices/-KfWxUaA7tnwZr4ZIbrq/stopAt/enabled") == true && Firebase.getInt("Devices/-KfWxUaA7tnwZr4ZIbrq/stopAt/hour") == hour() && Firebase.getInt("Devices/-KfWxUaA7tnwZr4ZIbrq/stopAt/min") == minute()) {
+    if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/stopAt/enabled") == true && Firebase.getInt(String("Devices/")+DEVICE_ID+"/stopAt/hour") == hour() && Firebase.getInt(String("Devices/")+DEVICE_ID+"/stopAt/min") == minute()) {
       digitalWrite(LED_BUILTIN, LOW);
-      Firebase.setBool("Devices/-KfWxUaA7tnwZr4ZIbrq/enabled", false);
-      Firebase.setBool("Devices/-KfWxUaA7tnwZr4ZIbrq/stopAt/enabled", false);
+      Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", false);
+      Firebase.setBool(String("Devices/")+DEVICE_ID+"/stopAt/enabled", false);
     }
   }
     
-  if(Firebase.getBool("Devices/-KfWxUaA7tnwZr4ZIbrq/enabled") == false) {
+  if(Firebase.getBool(String("Devices/")+DEVICE_ID+"enabled") == false) {
     digitalWrite(LED_BUILTIN, LOW);
-    if(Firebase.getBool("Devices/-KfWxUaA7tnwZr4ZIbrq/startAt/enabled") == true && Firebase.getInt("Devices/-KfWxUaA7tnwZr4ZIbrq/startAt/hour") == hour() && Firebase.getInt("Devices/-KfWxUaA7tnwZr4ZIbrq/startAt/min") == minute()) {
+    if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/startAt/enabled") == true && Firebase.getInt(String("Devices/")+DEVICE_ID+"/startAt/hour") == hour() && Firebase.getInt(String("Devices/")+DEVICE_ID+"/startAt/min") == minute()) {
       digitalWrite(LED_BUILTIN, HIGH);
-      Firebase.setBool("Devices/-KfWxUaA7tnwZr4ZIbrq/enabled", true);
-      Firebase.setBool("Devices/-KfWxUaA7tnwZr4ZIbrq/startAt/enabled", false);
+      Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", true);
+      Firebase.setBool(String("Devices/")+DEVICE_ID+"/startAt/enabled", false);
     }
   }
   
