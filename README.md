@@ -1,3 +1,3 @@
 # Watt? Project
 
-*Watt? Smart Plug*
+**Watt? Smart Plug**

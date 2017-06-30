@@ -1,10 +1,9 @@
-// Watt?
+// Watt? Smart Plug
 
 
 #include <ESP8266WiFi.h>		//https://github.com/esp8266/Arduino
 #include <FirebaseArduino.h>	//https://github.com/firebase/firebase-arduino
 #include "watt_time.h"
-#include <string.h>
 
 #define FIREBASE_HOST "watt-project-eg.firebaseio.com"
 #define FIREBASE_AUTH "BIiq1X5t2MYbzj9mQxat1BuABRNIX8VT7YGIz7Mb"
@@ -16,13 +15,12 @@
 #define WIFI_PASSWORD "The1stZox"
 
 
-
 float prevPowerAverage = 0;
 float realTime = 0;
 
 
-
 void setup() {
+
   //configurations
   Serial.begin(9600);
   pinMode(A0, INPUT);
@@ -131,4 +129,3 @@ float readRealTime() {
     return prevPowerAverage;
 
 }
-
