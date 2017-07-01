@@ -17,6 +17,7 @@
 
 float prevPowerAverage = 0;
 float realTime = 0;
+time_t interruptTime = 0;
 
 
 void setup() {
@@ -44,6 +45,11 @@ void setup() {
 
 void loop() {
 
+  //handling Interrupts
+  if(interruptTime != 0)  
+    handleInterrupt();
+
+  //mesurring realtime power consumption
   realTime = readRealTime();
   Firebase.setFloat(String("Devices/")+DEVICE_ID+"/consumption", realTime);
 
@@ -52,7 +58,7 @@ void loop() {
   Serial.println(String(hour()) + ":" + minute());
   Serial.println(" ");
 
-  
+  //sync device status with firebase
   if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/enabled") == true) {
     digitalWrite(CONTROL_PIN, HIGH);
     if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/stopAt/enabled") == true && Firebase.getInt(String("Devices/")+DEVICE_ID+"/stopAt/hour") == hour() && Firebase.getInt(String("Devices/")+DEVICE_ID+"/stopAt/min") == minute()) {
@@ -71,7 +77,7 @@ void loop() {
     }
   }
   
-  delay(500);
+  delay(250);
 }
 
 
@@ -125,19 +131,29 @@ float readRealTime() {
 
 void interrupt() {
 
-  delay(10);
-  time_t prev = now();
+  interruptTime = now();
 
+}
+  
+
+void handleInterrupt() {
+
+  time_t prev = interruptTime;
+  
+  //reset interrupt status
+  interruptTime = 0;
+
+  //reset if the button pushed for more than 5 seconds
   while(digitalRead(CONTROL_BUTTON) == 0) {
-    if(now() - prev >= 5) {
+    if(now() - prev >= 3) {
       wificonfig_reset();
-      ESP.restart();
+      ESP.reset();
     }
   }
 
   //toggle device if the button pushed for less than 5 seconds
-  digitalWrite(CONTROL_PIN, ~digitalRead(CONTROL_PIN));
+  digitalWrite(CONTROL_PIN, digitalRead(CONTROL_PIN)^1);
   Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", (bool)digitalRead(CONTROL_PIN));
 
 }
-  
+
