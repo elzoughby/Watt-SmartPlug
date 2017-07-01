@@ -86,6 +86,9 @@ float readRealTime() {
   float powerSum= 0;
   float powerAverage= 0;
 
+  if(digitalRead(CONTROL_PIN) == 0)
+    return 0;
+
   for(int j=0; j < 10; j++) {
 
     unsigned int sensorValue = 0;
@@ -132,20 +135,15 @@ float readRealTime() {
 void interrupt() {
 
   interruptTime = now();
-
+  
 }
   
 
 void handleInterrupt() {
 
-  time_t prev = interruptTime;
-  
-  //reset interrupt status
-  interruptTime = 0;
-
   //reset if the button pushed for more than 5 seconds
   while(digitalRead(CONTROL_BUTTON) == 0) {
-    if(now() - prev >= 3) {
+    if(now() - interruptTime >= 3) {
       wificonfig_reset();
       ESP.reset();
     }
@@ -154,6 +152,9 @@ void handleInterrupt() {
   //toggle device if the button pushed for less than 5 seconds
   digitalWrite(CONTROL_PIN, digitalRead(CONTROL_PIN)^1);
   Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", (bool)digitalRead(CONTROL_PIN));
+
+  //reset interrupt status
+  interruptTime = 0;
 
 }
 
