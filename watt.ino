@@ -3,8 +3,8 @@
 
 #include <ESP8266WiFi.h>		//https://github.com/esp8266/Arduino
 #include <FirebaseArduino.h>	//https://github.com/firebase/firebase-arduino
+#include "watt_wificonfig.h"
 #include "watt_time.h"
-#include "watt_smartconfig.h"
 
 #define FIREBASE_HOST "watt-project-eg.firebaseio.com"
 #define FIREBASE_AUTH "BIiq1X5t2MYbzj9mQxat1BuABRNIX8VT7YGIz7Mb"
@@ -19,14 +19,15 @@ float realTime = 0;
 
 void setup() {
 
-  smartconfig_init();
-  Serial.println("connected...yeey!");
-
   //configurations
   Serial.begin(9600);
   pinMode(A0, INPUT);
   pinMode(CONTROL_PIN, OUTPUT);
   pinMode(2, OUTPUT);
+
+  //Wifi configuration and connection
+  Serial.println("connecting");
+  wificonfig_start();
 
   //connect to firebase
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
