@@ -4,15 +4,13 @@
 #include <ESP8266WiFi.h>		//https://github.com/esp8266/Arduino
 #include <FirebaseArduino.h>	//https://github.com/firebase/firebase-arduino
 #include "watt_time.h"
+#include "watt_smartconfig.h"
 
 #define FIREBASE_HOST "watt-project-eg.firebaseio.com"
 #define FIREBASE_AUTH "BIiq1X5t2MYbzj9mQxat1BuABRNIX8VT7YGIz7Mb"
 
 #define DEVICE_ID "-KfWxUaA7tnwZr4ZIbrq"
 #define CONTROL_PIN LED_BUILTIN
-
-#define WIFI_SSID "Zox"
-#define WIFI_PASSWORD "The1stZox"
 
 
 float prevPowerAverage = 0;
@@ -21,25 +19,14 @@ float realTime = 0;
 
 void setup() {
 
+  smartconfig_init();
+  Serial.println("connected...yeey!");
+
   //configurations
   Serial.begin(9600);
   pinMode(A0, INPUT);
   pinMode(CONTROL_PIN, OUTPUT);
   pinMode(2, OUTPUT);
-
-  // connect to wifi.
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-
-  //just for debugging
-  Serial.print("connecting");
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.println();
-  Serial.print("connected: ");
-  Serial.println(WiFi.localIP());
 
   //connect to firebase
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
