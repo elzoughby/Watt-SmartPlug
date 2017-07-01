@@ -7,3 +7,5 @@
 #define AP_PASSWORD "12345678"
 
 void wificonfig_start();
+
+void wificonfig_reset();

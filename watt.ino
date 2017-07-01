@@ -8,9 +8,11 @@
 
 #define FIREBASE_HOST "watt-project-eg.firebaseio.com"
 #define FIREBASE_AUTH "BIiq1X5t2MYbzj9mQxat1BuABRNIX8VT7YGIz7Mb"
-
 #define DEVICE_ID "-KfWxUaA7tnwZr4ZIbrq"
-#define CONTROL_PIN LED_BUILTIN
+
+#define CONTROL_PIN 16  //4 for real board
+#define CONTROL_BUTTON 5
+#define WIFI_LED 2
 
 
 float prevPowerAverage = 0;
@@ -23,7 +25,9 @@ void setup() {
   Serial.begin(9600);
   pinMode(A0, INPUT);
   pinMode(CONTROL_PIN, OUTPUT);
-  pinMode(2, OUTPUT);
+  pinMode(CONTROL_BUTTON, INPUT);
+  attachInterrupt(digitalPinToInterrupt(CONTROL_BUTTON), interrupt, FALLING);
+  pinMode(WIFI_LED, OUTPUT);
 
   //Wifi configuration and connection
   Serial.println("connecting");
@@ -117,3 +121,23 @@ float readRealTime() {
     return prevPowerAverage;
 
 }
+
+
+void interrupt() {
+
+  delay(10);
+  time_t prev = now();
+
+  while(digitalRead(CONTROL_BUTTON) == 0) {
+    if(now() - prev >= 5) {
+      wificonfig_reset();
+      ESP.restart();
+    }
+  }
+
+  //toggle device if the button pushed for less than 5 seconds
+  digitalWrite(CONTROL_PIN, ~digitalRead(CONTROL_PIN));
+  Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", (bool)digitalRead(CONTROL_PIN));
+
+}
+  
