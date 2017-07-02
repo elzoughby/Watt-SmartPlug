@@ -22,7 +22,7 @@ void setup() {
 
 void loop() {
 
-  //handling Interrupts
+  //handling
   if(getInterruptTime() != 0)  
     handleInterrupt();
 
