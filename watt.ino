@@ -22,13 +22,13 @@ void setup() {
 
 void loop() {
 
-  //handling
+  //handling interrupt
   if(getInterruptTime() != 0)  
     handleInterrupt();
 
-  //mesurring realtime power consumption
+  //measuring realtime power consumption
   float realTime = readRealTime();
-  Firebase.setFloat(String("Devices/")+DEVICE_ID+"/consumption", realTime);
+  Firebase.setFloat(String("Devices/")+PLUG_ID+"/consumption", realTime);
 
   //just for debugging
   Serial.println(String("Real-time Power = ") + realTime);

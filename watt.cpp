@@ -70,25 +70,25 @@ float readRealTime() {
 
 void syncDeviceStatus() {
 
-  if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/enabled") == true) {
+  if(Firebase.getBool(String("Devices/")+PLUG_ID+"/enabled") == true) {
     digitalWrite(CONTROL_PIN, HIGH);
     pinMode(WIFI_LED, OUTPUT);
-    if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/stopAt/enabled") == true && Firebase.getInt(String("Devices/")+DEVICE_ID+"/stopAt/hour") == hour() && Firebase.getInt(String("Devices/")+DEVICE_ID+"/stopAt/min") == minute()) {
+    if(Firebase.getBool(String("Devices/")+PLUG_ID+"/stopAt/enabled") == true && Firebase.getInt(String("Devices/")+PLUG_ID+"/stopAt/hour") == hour() && Firebase.getInt(String("Devices/")+PLUG_ID+"/stopAt/min") == minute()) {
       digitalWrite(CONTROL_PIN, LOW);
       pinMode(WIFI_LED, INPUT);
-      Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", false);
-      Firebase.setBool(String("Devices/")+DEVICE_ID+"/stopAt/enabled", false);
+      Firebase.setBool(String("Devices/")+PLUG_ID+"/enabled", false);
+      Firebase.setBool(String("Devices/")+PLUG_ID+"/stopAt/enabled", false);
     }
   }
 
-  if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/enabled") == false) {
+  if(Firebase.getBool(String("Devices/")+PLUG_ID+"/enabled") == false) {
     digitalWrite(CONTROL_PIN, LOW);
     pinMode(WIFI_LED, INPUT);
-    if(Firebase.getBool(String("Devices/")+DEVICE_ID+"/startAt/enabled") == true && Firebase.getInt(String("Devices/")+DEVICE_ID+"/startAt/hour") == hour() && Firebase.getInt(String("Devices/")+DEVICE_ID+"/startAt/min") == minute()) {
+    if(Firebase.getBool(String("Devices/")+PLUG_ID+"/startAt/enabled") == true && Firebase.getInt(String("Devices/")+PLUG_ID+"/startAt/hour") == hour() && Firebase.getInt(String("Devices/")+PLUG_ID+"/startAt/min") == minute()) {
       digitalWrite(CONTROL_PIN, HIGH);
       pinMode(WIFI_LED, OUTPUT);
-      Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", true);
-      Firebase.setBool(String("Devices/")+DEVICE_ID+"/startAt/enabled", false);
+      Firebase.setBool(String("Devices/")+PLUG_ID+"/enabled", true);
+      Firebase.setBool(String("Devices/")+PLUG_ID+"/startAt/enabled", false);
     }
   }
 
@@ -114,7 +114,7 @@ void handleInterrupt() {
   //toggle device if the button pushed for less than 5 seconds
   digitalWrite(CONTROL_PIN, digitalRead(CONTROL_PIN)^1);
   pinMode(WIFI_LED, digitalRead(CONTROL_PIN));
-  Firebase.setBool(String("Devices/")+DEVICE_ID+"/enabled", (bool)digitalRead(CONTROL_PIN));
+  Firebase.setBool(String("Devices/")+PLUG_ID+"/enabled", (bool)digitalRead(CONTROL_PIN));
 
   //reset interrupt status
   interruptTime = 0;
